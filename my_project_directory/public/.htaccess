@@ -1,0 +1,18 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirige tout vers index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# Empêche l'accès aux fichiers sensibles
+<FilesMatch "\.(env|json|lock|md|yml|xml|twig|ini)$">
+    Require all denied
+</FilesMatch>
+
+# Empêche l'accès aux dossiers sensibles
+<DirectoryMatch "(config|bin|vendor|var)">
+    Require all denied
+</DirectoryMatch>
