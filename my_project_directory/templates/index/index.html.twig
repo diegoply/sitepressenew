@@ -5,13 +5,10 @@
 {% block body %}
 
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/laragon/www/SitePresseNew/my_project_directory/src/Controller/IndexController.php</code></li>
-        <li>Your template at <code>C:/laragon/www/SitePresseNew/my_project_directory/templates/index/index.html.twig</code></li>
-    </ul>
+<div class="w-full min-h-screen flex items-start justify-center bg-white p-4">
+    <h1 class="text-2xl font-bold text-green-500">
+        Hello {{ last_username }}!
+    </h1>
 </div>
+
 {% endblock %}
