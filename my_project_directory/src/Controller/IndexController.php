@@ -16,7 +16,6 @@ final class IndexController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('index/index.html.twig', [
-            'controller_name' => 'Bienvenue',
             'last_username' => $lastUsername,
         ]);
     }
