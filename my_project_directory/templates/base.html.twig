@@ -12,7 +12,17 @@
 <body class="bg-white min-h-screen flex flex-col">
 
     {# Header avec boutons connexion/déconnexion en haut à droite #}
-    <header class="w-full flex justify-end p-4">
+<header class="w-full flex justify-between items-center p-4 bg-white shadow">
+    {# Menu à gauche #}
+    <nav class="flex-1 flex justify-center ms-4">
+        <ul class="flex space-x-4">
+            <li><a href="" class="text-green-500 hover:underline">Liste des articles</a></li>
+            <li><a href="" class="text-green-500 hover:underline">Créer un article</a></li>
+        </ul>
+    </nav>
+
+    {# Bouton connexion/déconnexion à droite #}
+    <div>
         {% if app.user %}
             <a href="{{ path('app_logout') }}"
                class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-red-400">
@@ -24,7 +34,8 @@
                 Connexion
             </a>
         {% endif %}
-    </header>
+    </div>
+</header>
 
     {# Contenu principal centré #}
     <main class="flex-grow flex items-center justify-center">

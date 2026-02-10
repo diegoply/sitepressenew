@@ -7,7 +7,9 @@
 
 <div class="w-full min-h-screen flex items-start justify-center bg-white p-4">
     <h1 class="text-2xl font-bold text-green-500">
-        Hello {{ last_username }}!
+    {% if app.user %}
+        Bienvenue {{ last_username }}!
+    {% endif %}
     </h1>
 </div>
 
