@@ -16,6 +16,13 @@ class ArticleNote
     #[ORM\Column(nullable: true)]
     private ?int $note = null;
 
+    #[ORM\ManyToOne(inversedBy: 'article_note')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'article_note')]
+    private ?Article $article = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +36,30 @@ class ArticleNote
     public function setNote(?int $note): static
     {
         $this->note = $note;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getArticle(): ?Article
+    {
+        return $this->article;
+    }
+
+    public function setArticle(?Article $article): static
+    {
+        $this->article = $article;
 
         return $this;
     }
