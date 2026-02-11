@@ -6,8 +6,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use App\Entity\Article;
+use App\Entity\ArticleCategory;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 
 class ArticleType extends AbstractType
 {
@@ -19,6 +22,13 @@ class ArticleType extends AbstractType
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Contenue',
+            ])
+            ->add('article_category', EntityType::class, [
+            'class' => ArticleCategory::class,  // l'entité liée
+            'choice_label' => 'name',          // ce qui sera affiché dans le select
+            'label' => 'Catégorie',
+            'placeholder' => 'Choisir une catégorie', // optionnel
+            'required' => true,                // ou false si facultatif
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Soumettre',

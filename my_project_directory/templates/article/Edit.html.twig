@@ -41,6 +41,22 @@
 
     {{ form_errors(form.content) }}
 </div>
+
+<div class="mb-5">
+    {{ form_label(form.article_category, null, {
+        label_attr: {
+            class: 'block text-sm font-semibold text-green-500 mb-1'
+        }
+    }) }}
+
+    {{ form_widget(form.article_category, {
+        attr: {
+            class: 'w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition'
+        }
+    }) }}
+
+    {{ form_errors(form.article_category) }}
+</div>
     
 
 
