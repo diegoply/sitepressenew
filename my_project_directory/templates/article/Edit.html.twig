@@ -6,7 +6,7 @@
 
 
 <div class="w-full max-w-md p-8 bg-white border border-green-500 shadow-lg rounded-lg">
-    <h1 class = "text-2xl font-bold mb-6 text-center text-green-500">Ajouter un Article</h1>
+    <h1 class = "text-2xl font-bold mb-6 text-center text-green-500">{{ is_create ? 'Ajouter un article' : 'Modifier cet article' }}</h1>
 <div class = "text-green-500">
     {{ form_start(form) }}
 

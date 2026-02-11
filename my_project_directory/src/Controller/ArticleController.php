@@ -3,11 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Article;
-
+use App\Entity\Comment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Form\ArticleType;
+use App\Form\CommentType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,10 +24,18 @@ final class ArticleController extends AbstractController
     }
 
     #[Route('/Show/{id}', name: 'app_show')]
-    public function Show(ArticleRepository $articleRepository, Article $article): Response
+    public function Show(Article $article): Response
     {
+
+        $comment = new comment();
+        $comment->setArticle($article);
+
+
+        $form = $this->createForm(CommentType::class, $comment);
+
         return $this->render('article/Show.html.twig', [
             'article' => $article,
+            'form' => $form,
         ]);
     }
 
@@ -74,6 +83,7 @@ final class ArticleController extends AbstractController
 
         return $this->render('article/Edit.html.twig', [
             'form' => $form,
+            'is_create' => $isCreate,
         ]);
     }
 
