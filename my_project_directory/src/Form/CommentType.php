@@ -17,7 +17,9 @@ class CommentType extends AbstractType
         $builder
             ->add('comment', TextareaType::class)
             //->add('article', HiddenType::class)
-            ->add('submit', SubmitType::class);
+            ->add('submit', SubmitType::class, [
+                'label' => 'Soumettre',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

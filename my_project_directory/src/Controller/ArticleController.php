@@ -24,37 +24,35 @@ final class ArticleController extends AbstractController
     }
 
     #[Route('/Show/{id}', name: 'app_show')]
-    public function Show(Article $article, Request $request, EntityManagerInterface $em): Response
-    {
+public function Show(Article $article, Request $request, EntityManagerInterface $em): Response
+{
+    $newComment = new Comment();
+    $newComment->setArticle($article);
 
-        $comment = new comment();
-        $comment->setArticle($article);
+    $form = $this->createForm(CommentType::class, $newComment);
+    $form->handleRequest($request);
 
+    if ($form->isSubmitted() && $form->isValid() && $this->getUser()) {
+        $newComment->setUser($this->getUser());
+        $newComment->setPublishedAt(new \DateTimeImmutable());
 
-        $form = $this->createForm(CommentType::class, $comment);
-        $form->handleRequest($request);
+        $em->persist($newComment);
+        $em->flush();
 
-        if ($form->isSubmitted() && $form->isValid()){
-            $comment = $form->getData();
-
-            $comment->setPublishedAt(new \DateTimeImmutable());
-            
-
-            $comment->setUser($this->getUser());
-
-            
-
-            $em->persist($comment);
-            $em->flush();
-
-            dd($comment);
-        }
-
-        return $this->render('article/Show.html.twig', [
-            'article' => $article,
-            'form' => $form,
-        ]);
+        // ⚡ Redirige pour recharger correctement les commentaires
+        return $this->redirectToRoute('app_show', ['id' => $article->getId()]);
     }
+
+    // Récupération correcte des commentaires depuis la base
+    $commentsInDb = $article->getComment();
+
+    return $this->render('article/Show.html.twig', [
+        'article' => $article,
+        'form' => $form,
+        'comments' => $commentsInDb,
+    ]);
+}
+
 
     #[Route('/edit/{id}', name: 'app_edit')]
     #[Route('/create', name: 'app_create')]
@@ -74,7 +72,7 @@ final class ArticleController extends AbstractController
         $form = $this->createForm(ArticleType::class, $article);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $this->getUser()) {
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
             $article = $form->getData();
@@ -90,8 +88,9 @@ final class ArticleController extends AbstractController
             $em->persist($article);
             $em->flush();
 
+            
             $this->addFlash('success', $isCreate ? 'L/article a etait créé' : 'L/article a etait modifier');
-            // dd($article);
+             
 
             // ... perform some action, such as saving the task to the database
 

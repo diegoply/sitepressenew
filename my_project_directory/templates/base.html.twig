@@ -15,7 +15,8 @@
 <header class="w-full flex justify-between items-center p-4 bg-white shadow">
     {# Menu à gauche #}
     <nav class="flex-1 flex justify-center ms-4">
-        <ul class="flex space-x-4">
+        <ul class="flex space-x-4"> 
+            <li><a href="{{ path('app_index') }}" class="text-green-500 hover:underline">Accueil</a></li>
             <li><a href="{{ path('app_liste') }}" class="text-green-500 hover:underline">Liste des articles</a></li>
             <li><a href="{{ path('app_create') }}" class="text-green-500 hover:underline">Créer un article</a></li>
         </ul>

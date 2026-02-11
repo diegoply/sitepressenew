@@ -16,7 +16,9 @@ class ArticleType extends AbstractType
         $builder
             ->add('title', TextType::class)
             ->add('content', TextareaType::class)
-            ->add('submit', SubmitType::class);
+            ->add('submit', SubmitType::class, [
+                'label' => 'Soumettre',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
