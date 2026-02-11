@@ -24,7 +24,7 @@ final class ArticleController extends AbstractController
     }
 
     #[Route('/Show/{id}', name: 'app_show')]
-    public function Show(Article $article): Response
+    public function Show(Article $article, Request $request, EntityManagerInterface $em): Response
     {
 
         $comment = new comment();
@@ -32,6 +32,23 @@ final class ArticleController extends AbstractController
 
 
         $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            $comment = $form->getData();
+
+            $comment->setPublishedAt(new \DateTimeImmutable());
+            
+
+            $comment->setUser($this->getUser());
+
+            
+
+            $em->persist($comment);
+            $em->flush();
+
+            dd($comment);
+        }
 
         return $this->render('article/Show.html.twig', [
             'article' => $article,
