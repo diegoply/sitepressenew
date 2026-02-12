@@ -10,6 +10,8 @@ use App\Entity\ArticleCategory;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 
 
 class ArticleType extends AbstractType
@@ -29,6 +31,17 @@ class ArticleType extends AbstractType
             'label' => 'Catégorie',
             'placeholder' => 'Choisir une catégorie', // optionnel
             'required' => true,                // ou false si facultatif
+            ])
+            
+            ->add('status', ChoiceType::class, [
+            'label' => 'Statut de l\'article',
+            'choices' => [
+            'Brouillon' => 'DRAFT',
+            'Publié' => 'PUBLISHED',
+        '   Archivé' => 'ARCHIVED',
+            ],
+            'expanded' => false, // true = boutons radio, false = select
+    
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Soumettre',

@@ -80,7 +80,7 @@ public function Show(Article $article, Request $request, EntityManagerInterface 
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
             $article = $form->getData();
-            $article->setStatus("DRAFT");
+            //$article->setStatus("DRAFT");
             $article->setPublishedAt(new \DateTimeImmutable());
             
 

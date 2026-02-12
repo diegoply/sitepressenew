@@ -204,4 +204,14 @@ class Article
 
         return $this;
     }
+
+    public function getStatusLabel(): string
+    {
+    return match($this->status) {
+        'DRAFT' => 'Brouillon',
+        'PUBLISHED' => 'Publié',
+        'ARCHIVED' => 'Archivé',
+        default => 'Inconnu',
+    };
+    }
 }

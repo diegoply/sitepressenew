@@ -13,6 +13,10 @@
         Catégorie : {{ article.ArticleCategory.name }}
     </p>
 
+    <p class="text-gray-700 text-1xl leading-relaxed text-center mt-12 font-bold">
+        Status : {{ article.statusLabel }}
+    </p>
+
 
     <p class="text-gray-700 text-1xl leading-relaxed text-center mt-12">
         Publié le : {{ article.publishedAt ? article.publishedAt|date('d/m/Y H:i', 'Europe/Paris') : 'Date non définie' }}
