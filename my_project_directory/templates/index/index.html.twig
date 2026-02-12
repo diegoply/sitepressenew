@@ -8,12 +8,12 @@
 <div class="w-full min-h-screen flex flex-col items-center justify-start bg-white p-4 ">
     {% if app.user %}
         <h1 class="text-3xl font-bold text-green-500 pb-20 pt-20">
-            Bienvenue {{ last_username }} !
+            Bienvenue {{ last_username }} sur Dernières infos!
         </h1>
     {% else %}
 
     <h1 class="text-3xl font-bold text-green-500 pb-20 pt-20">
-            Bienvenue!
+            Bienvenue sur Dernières infos!
         </h1>
 
     {% endif %}
@@ -21,6 +21,9 @@
     <p class="text-2xl font-bold text-black text-center max-w-2xl">
         Bienvenue sur notre site dédié au partage d'articles de presse, où vous pouvez découvrir, lire et partager des contenus variés issus de l'actualité et de différents médias.
     </p>
+
+    <img src="{{ asset('image/image site index.png') }}" alt="Bannière site de presse" class="w-3xl mt-12 rounded-lg shadow">
+
 </div>
 
 
