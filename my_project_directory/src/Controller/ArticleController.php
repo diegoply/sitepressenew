@@ -138,7 +138,7 @@ public function edit(Article $article, Request $request, EntityManagerInterface 
 
 
 
-    #[Route('/deleteComment/{id}', name: 'app_deleteComment')]
+#[Route('/deleteComment/{id}', name: 'app_deleteComment')]
 public function DeleteComment(
     int $id,
     CommentRepository $commentRepository,
@@ -149,7 +149,17 @@ public function DeleteComment(
 
     if (!$comment) {
         $this->addFlash('error', "Commentaire introuvable !");
-        return $this->redirectToRoute('app_liste'); // ou app_show selon ton cas
+        return $this->redirectToRoute('app_liste'); // ou app_show si tu veux
+    }
+
+    $user = $this->getUser();
+
+    // 🔒 Sécurité : seul l'auteur ou un admin peut supprimer
+    if (!$user || (!in_array('ROLE_ADMIN', $user->getRoles()) && $comment->getUser() !== $user)) {
+        $this->addFlash('error', "Vous n'avez pas la permission de supprimer ce commentaire !");
+        return $this->redirectToRoute('app_show', [
+            'id' => $comment->getArticle()->getId()
+        ]);
     }
 
     $article = $comment->getArticle();
@@ -157,10 +167,13 @@ public function DeleteComment(
     $em->remove($comment);
     $em->flush();
 
+    $this->addFlash('success', "Commentaire supprimé avec succès !");
+
     return $this->redirectToRoute('app_show', [
         'id' => $article->getId()
     ]);
 }
+
 
 
     #[Route('/delete/{id}', name: 'app_delete')]

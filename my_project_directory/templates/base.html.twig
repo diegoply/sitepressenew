@@ -18,8 +18,12 @@
         <ul class="flex space-x-4"> 
             <li><a href="{{ path('app_index') }}" class="text-green-500 hover:underline">Accueil</a></li>
             <li><a href="{{ path('app_liste') }}" class="text-green-500 hover:underline">Liste des articles</a></li>
+            {% if is_granted('ROLE_ADMIN') %}
             <li><a href="{{ path('app_create') }}" class="text-green-500 hover:underline">Créer un article</a></li>
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
             <li><a href="{{ path('app_category_new') }}" class="text-green-500 hover:underline">Créer une catégorie</a></li>
+            {% endif %}
         </ul>
     </nav>
 
