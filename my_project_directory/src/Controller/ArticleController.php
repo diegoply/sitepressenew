@@ -84,55 +84,59 @@ public function Show(Article $article, Request $request, EntityManagerInterface 
 }
 
 
-    #[Route('/edit/{id}', name: 'app_edit')]
-    #[Route('/create', name: 'app_create')]
-    public function Edit(Request $request, EntityManagerInterface $em, ?Article $article = NULL): Response
-    {
+ #[Route('/create', name: 'app_create')]
+public function create(Request $request, EntityManagerInterface $em): Response
+{
+    $article = new Article();
 
-        $isCreate = false;
+    $form = $this->createForm(ArticleType::class, $article);
+    $form->handleRequest($request);
 
-        if(!$article){
+    if ($form->isSubmitted() && $form->isValid()) {
 
-            $isCreate = true;
-            $article = new Article();
-        }
+        $article->setPublishedAt(new \DateTimeImmutable());
+        $article->setUser($this->getUser());
 
-        
+        $em->persist($article);
+        $em->flush();
 
-        $form = $this->createForm(ArticleType::class, $article);
+        $this->addFlash('success', 'L’article a été créé');
 
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid() && $this->getUser()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
-            $article = $form->getData();
-            //$article->setStatus("DRAFT");
-            $article->setPublishedAt(new \DateTimeImmutable());
-            
-
-            $article->setUser($this->getUser());
-            //dd($article);
-
-
-           //dd($article);
-
-            $em->persist($article);
-            $em->flush();
-
-            
-            $this->addFlash('success', $isCreate ? 'L/article a etait créé' : 'L/article a etait modifier');
-             
-
-            // ... perform some action, such as saving the task to the database
-
-            return $this->redirectToRoute('app_liste');
-        }
-
-        return $this->render('article/Edit.html.twig', [
-            'form' => $form,
-            'is_create' => $isCreate,
+        return $this->redirectToRoute('app_show', [
+        'id' => $article->getId()
         ]);
     }
+
+    return $this->render('article/Edit.html.twig', [
+        'form' => $form->createView(),
+        'is_create' => true,
+    ]);
+}
+
+#[Route('/edit/{id}', name: 'app_edit')]
+public function edit(Article $article, Request $request, EntityManagerInterface $em): Response
+{
+    $form = $this->createForm(ArticleType::class, $article);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+
+        $em->flush(); // PAS besoin de persist
+
+        $this->addFlash('success', 'L’article a été modifié');
+
+        return $this->redirectToRoute('app_show', [
+        'id' => $article->getId()
+]);
+    }
+
+    return $this->render('article/Edit.html.twig', [
+        'form' => $form->createView(),
+        'is_create' => false,
+    ]);
+}
+
+
 
     #[Route('/deleteComment/{id}', name: 'app_deleteComment')]
 public function DeleteComment(

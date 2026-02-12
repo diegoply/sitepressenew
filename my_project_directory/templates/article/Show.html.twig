@@ -61,6 +61,9 @@
                             {{ comment.publishedAt ? comment.publishedAt|date('d/m/Y H:i', 'Europe/Paris') : 'Date non définie' }}
                         </p>
                         <p class="text-gray-700 text-center mt-2">{{ comment.comment }}</p>
+                        <div class="text-right">
+                        <a href="{{ path('app_deleteComment', {'id': comment.id}) }}" class="text-red-500 hover:underline ">Supprimer</a>
+                    </div>
                     </div>
                 {% endfor %}
             </div>

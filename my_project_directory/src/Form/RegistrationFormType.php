@@ -16,11 +16,9 @@ class UserType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'label' => 'Prenom',
+                'label' => 'Pseudo',
             ])
-            ->add('lastname', TextType::class, [
-                'label' => 'Nom',
-            ])
+            
             ->add('password', PasswordType::class, [
                 'label' => 'Mots de passe',
             ])

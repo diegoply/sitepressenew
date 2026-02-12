@@ -32,29 +32,51 @@ class SecurityController extends AbstractController
         ]);
     }
 
-   #[Route(path: '/register', name: 'app_register')]
-public function register(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
+#[Route(path: '/register', name: 'app_register')]
+public function register(
+    Request $request,
+    EntityManagerInterface $em,
+    UserPasswordHasherInterface $passwordHasher
+): Response
 {
     $newUser = new User();
     $form = $this->createForm(UserType::class, $newUser);
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        $hashedPassword = $passwordHasher->hashPassword($newUser, $form->get('password')->getData());
-        $newUser->setPassword($hashedPassword);
-        $newUser->setRoles(['ROLE_USER']);
 
-        $em->persist($newUser);
-        $em->flush();
+        // 🔎 Vérifier si username existe déjà
+        $existingUser = $em->getRepository(User::class)
+            ->findOneBy(['username' => $newUser->getUsername()]);
 
-        $this->addFlash('success', 'Votre compte a été créé !');
-        return $this->redirectToRoute('app_login');
+        if ($existingUser) {
+            $form->get('username')
+                ->addError(new \Symfony\Component\Form\FormError(
+                    'Ce Pseudo est déjà utilisé.'
+                ));
+        } else {
+
+            $hashedPassword = $passwordHasher->hashPassword(
+                $newUser,
+                $form->get('password')->getData()
+            );
+
+            $newUser->setPassword($hashedPassword);
+            $newUser->setRoles(['ROLE_USER']);
+
+            $em->persist($newUser);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre compte a été créé !');
+            return $this->redirectToRoute('app_login');
+        }
     }
 
     return $this->render('security/register.html.twig', [
         'form' => $form->createView(),
     ]);
 }
+
 
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
