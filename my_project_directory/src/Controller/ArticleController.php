@@ -176,13 +176,26 @@ public function DeleteComment(
 
 
 
-    #[Route('/delete/{id}', name: 'app_delete')]
+   #[Route('/delete/{id}', name: 'app_delete')]
     public function Delete(EntityManagerInterface $em, Article $article): Response
     {
-
-        $em->remove($article);
-        $em->flush();
-
-        return $this->redirectToRoute('app_liste');
+    // Supprimer tous les commentaires liés
+    foreach ($article->getComment() as $comment) {
+        $em->remove($comment);
     }
+
+    // Supprimer toutes les notes liées
+    foreach ($article->getArticleNote() as $note) {
+    $em->remove($note);
+}
+
+
+    // Supprimer l'article
+    $em->remove($article);
+    $em->flush();
+
+    $this->addFlash('success', 'Article et ses données associées supprimés avec succès !');
+
+    return $this->redirectToRoute('app_liste');
+}
 }

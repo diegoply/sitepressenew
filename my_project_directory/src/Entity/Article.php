@@ -38,7 +38,7 @@ class Article
     /**
      * @var Collection<int, ArticleNote>
      */
-    #[ORM\OneToMany(targetEntity: ArticleNote::class, mappedBy: 'article')]
+    #[ORM\OneToMany(targetEntity: ArticleNote::class, mappedBy: 'article', orphanRemoval: true, cascade: ['remove'])]
     private Collection $article_note;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
@@ -47,7 +47,7 @@ class Article
     /**
      * @var Collection<int, Comment>
      */
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article')]
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article', orphanRemoval: true, cascade: ['remove'])]
     private Collection $comment;
 
     public function __construct()
