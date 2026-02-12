@@ -18,28 +18,49 @@
             </tr>
         </thead>
 
-        <tbody class="bg-white">
-            {% for article in articles %}
-                <tr class="hover:bg-green-50">
-                    <td class="py-3 px-6 border-b">{{ article.title }}</td>
-                    <td class="py-3 px-6 border-b">{{ article.statusLabel ?: 'Non défini' }}</td>
-                    <td class="py-3 px-6 border-b text-center space-x-4">
-                        <a href="{{ path('app_show', {'id': article.id}) }}" class="text-green-500 hover:underline">Voir</a>
+<tbody class="bg-white">
+{% set found = false %}
 
-                        {% if app.user and (is_granted('ROLE_ADMIN') or article.user == app.user) %}
-                        <a href="{{ path('app_edit', {'id': article.id}) }}" class="text-blue-500 hover:underline">Éditer</a>
-                        {% endif %}
-                        {% if app.user and (is_granted('ROLE_ADMIN') or article.user == app.user) %}
-                        <a href="{{ path('app_delete', {'id': article.id}) }}" class="text-red-500 hover:underline">Supprimer</a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="3" class="py-4 px-6 text-center text-gray-500">Aucun article trouvé</td>
-                </tr>
-            {% endfor %}
-        </tbody>
+{% for article in articles %}
+
+    {% set canSee = false %}
+
+    {# Tous les articles PUBLISHED ou ARCHIVED sont visibles #}
+    {% if article.status == 'PUBLISHED' or article.status == 'ARCHIVED' %}
+        {% set canSee = true %}
+    {% endif %}
+
+    {# Les articles DRAFT ne sont visibles que par l'auteur ou admin #}
+    {% if article.status == 'DRAFT' and app.user and (is_granted('ROLE_ADMIN') or article.user == app.user) %}
+        {% set canSee = true %}
+    {% endif %}
+
+    {% if canSee %}
+        {% set found = true %}
+        <tr class="hover:bg-green-50">
+            <td class="py-3 px-6 border-b">{{ article.title }}</td>
+            <td class="py-3 px-6 border-b">{{ article.statusLabel ?: 'Non défini' }}</td>
+            <td class="py-3 px-6 border-b text-center space-x-4">
+                <a href="{{ path('app_show', {'id': article.id}) }}" class="text-green-500 hover:underline">Voir</a>
+
+                {% if app.user and (is_granted('ROLE_ADMIN') or article.user == app.user) %}
+                    <a href="{{ path('app_edit', {'id': article.id}) }}" class="text-blue-500 hover:underline">Éditer</a>
+                    <a href="{{ path('app_delete', {'id': article.id}) }}" class="text-red-500 hover:underline">Supprimer</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endif %}
+
+{% endfor %}
+
+{% if not found %}
+    <tr>
+        <td colspan="3" class="py-4 px-6 text-center text-gray-500">Aucun article trouvé</td>
+    </tr>
+{% endif %}
+</tbody>
+
+
     </table>
 </div>
 
