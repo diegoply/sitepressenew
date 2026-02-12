@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\ArticleNote;
 use App\Entity\Comment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ use App\Repository\ArticleRepository;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+
 
 final class ArticleController extends AbstractController
 {
@@ -38,6 +40,18 @@ public function Show(Article $article, Request $request, EntityManagerInterface 
         $newComment->setPublishedAt(new \DateTimeImmutable());
 
         $em->persist($newComment);
+
+         // ⚡ Création de la note
+        $noteValue = $form->get('note')->getData();
+        if ($noteValue) {
+            $articleNote = new ArticleNote();
+            $articleNote->setArticle($article);
+            $articleNote->setUser($this->getUser());
+            $articleNote->setNote($noteValue);
+
+            $em->persist($articleNote);
+        }
+
         $em->flush();
 
         // ⚡ Redirige pour recharger correctement les commentaires
@@ -46,14 +60,26 @@ public function Show(Article $article, Request $request, EntityManagerInterface 
 
     // Récupération correcte des commentaires depuis la base
     $commentsInDb = $article->getComment();
+    // Récupération Notes
+    // 🔹 Récupérer toutes les notes de l'article
+    $articleNotes = $em->getRepository(ArticleNote::class)
+        ->findBy(['article' => $article]);
    
+    //dd($articleNotes);
 
+    //Calcul Moyenne notes
+    $averageNote = 0;
+    if (count($articleNotes) > 0) {
+        $total = array_sum(array_map(fn($n) => $n->getNote(), $articleNotes));
+        $averageNote = round($total / count($articleNotes), 1);
+    }
     
 
     return $this->render('article/Show.html.twig', [
         'article' => $article,
         'form' => $form,
         'comments' => $commentsInDb,
+        'averageNote' => $averageNote,
     ]);
 }
 
