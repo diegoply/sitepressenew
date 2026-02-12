@@ -14,6 +14,7 @@ final class IndexController extends AbstractController
     {
         // Récupère le dernier username entré
         $lastUsername = $authenticationUtils->getLastUsername();
+        
 
         return $this->render('index/index.html.twig', [
             'last_username' => $lastUsername,
