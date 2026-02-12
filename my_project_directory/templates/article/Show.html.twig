@@ -41,6 +41,9 @@
                 <p class="text-sm text-gray-500 mt-2 text-center">
                     {{ comment.publishedAt ? comment.publishedAt|date('d/m/Y H:i', 'Europe/Paris') : 'Date non définie' }}
                 </p>
+                <p class="text-sm text-gray-500 mt-2 text-center">
+                            {{ comment.user.username }}
+                </p>
                 <p class="text-gray-700 text-center mt-2">{{ comment.comment }}</p>
                         <div class="text-right mt-1">
                         {% if app.user and is_granted('ROLE_ADMIN') %}
@@ -64,6 +67,9 @@
                     <div class="hover:bg-green-50 border-b py-4">
                         <p class="text-sm text-gray-500 mt-2 text-center">
                             {{ comment.publishedAt ? comment.publishedAt|date('d/m/Y H:i', 'Europe/Paris') : 'Date non définie' }}
+                        </p>
+                        <p class="text-sm text-gray-500 mt-2 text-center">
+                            {{ comment.user.username }}
                         </p>
                         <p class="text-gray-700 text-center mt-2">{{ comment.comment }}</p>
 

@@ -26,8 +26,10 @@
                     <td class="py-3 px-6 border-b text-center space-x-4">
                         <a href="{{ path('app_show', {'id': article.id}) }}" class="text-green-500 hover:underline">Voir</a>
 
-                        {% if is_granted('ROLE_ADMIN') %}
+                        {% if app.user and (is_granted('ROLE_ADMIN') or article.user == app.user) %}
                         <a href="{{ path('app_edit', {'id': article.id}) }}" class="text-blue-500 hover:underline">Éditer</a>
+                        {% endif %}
+                        {% if app.user and (is_granted('ROLE_ADMIN') or article.user == app.user) %}
                         <a href="{{ path('app_delete', {'id': article.id}) }}" class="text-red-500 hover:underline">Supprimer</a>
                         {% endif %}
                     </td>
