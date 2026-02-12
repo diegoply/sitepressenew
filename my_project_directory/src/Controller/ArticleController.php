@@ -10,6 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Form\ArticleType;
 use App\Form\CommentType;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -45,6 +46,9 @@ public function Show(Article $article, Request $request, EntityManagerInterface 
 
     // Récupération correcte des commentaires depuis la base
     $commentsInDb = $article->getComment();
+   
+
+    
 
     return $this->render('article/Show.html.twig', [
         'article' => $article,
@@ -81,6 +85,7 @@ public function Show(Article $article, Request $request, EntityManagerInterface 
             
 
             $article->setUser($this->getUser());
+            //dd($article);
 
 
            //dd($article);
@@ -102,6 +107,31 @@ public function Show(Article $article, Request $request, EntityManagerInterface 
             'is_create' => $isCreate,
         ]);
     }
+
+    #[Route('/deleteComment/{id}', name: 'app_deleteComment')]
+public function DeleteComment(
+    int $id,
+    CommentRepository $commentRepository,
+    EntityManagerInterface $em
+): Response {
+
+    $comment = $commentRepository->find($id);
+
+    if (!$comment) {
+        $this->addFlash('error', "Commentaire introuvable !");
+        return $this->redirectToRoute('app_liste'); // ou app_show selon ton cas
+    }
+
+    $article = $comment->getArticle();
+
+    $em->remove($comment);
+    $em->flush();
+
+    return $this->redirectToRoute('app_show', [
+        'id' => $article->getId()
+    ]);
+}
+
 
     #[Route('/delete/{id}', name: 'app_delete')]
     public function Delete(EntityManagerInterface $em, Article $article): Response
